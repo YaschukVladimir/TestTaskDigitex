@@ -18,3 +18,7 @@ type Coords = {
 export type State = ReturnType<typeof store.getState>;
 
 export type CoordsArr = [number, number];
+
+export type ToChangeEntityStringType = 'name' | 'coordX' | 'coordY' | 'labels';
+
+export type AppDispatch = typeof store.dispatch;

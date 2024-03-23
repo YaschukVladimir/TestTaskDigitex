@@ -15,7 +15,6 @@ const appSlice = createSlice({
             state.entities.push(action.payload);
         },
         removeEntity(state, action) {
-            console.log(state.entities);
             const result = state.entities.filter((entity) => {
                return entity.id !== action.payload;
             });
@@ -23,12 +22,17 @@ const appSlice = createSlice({
         },
         editEntity(state, action) {
             const editedEntity = action.payload;
-            const entityToEditIndex = state.entities.findIndex((entity) => entity.id === action.payload.id);
-            state.entities.splice(entityToEditIndex, 1, editedEntity);
+            state.entities = [...state.entities.map((entity) => {
+                if (entity.id === editedEntity.id) {
+                    return {...editedEntity};
+                }
+                return entity;
+            })]
+            
         },
         clearState(state) {
             state.entities = [];
-        }
+        },
     }
 });
 

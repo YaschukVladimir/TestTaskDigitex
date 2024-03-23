@@ -1,11 +1,11 @@
 
 import { mockData } from "../mock/mock-data";
-import { useDispatch } from "react-redux";
 import { addEntity, clearState } from "../store/app-slice";
 import { url } from "../utils";
+import { useAppDispatch } from "../hooks/use-app-dispatch";
 
 function FetchEntitiesButton ():React.JSX.Element {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const fetchEntities = () => {
             fetch(url, {
                 headers: {

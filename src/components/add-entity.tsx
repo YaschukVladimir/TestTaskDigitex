@@ -1,12 +1,13 @@
-import { useDispatch } from "react-redux";
+
 import { Entity } from "../types/types";
 import { useForm } from 'react-hook-form';
 import { addEntity } from "../store/app-slice";
+import { useAppDispatch } from "../hooks/use-app-dispatch";
 
 type FormValues = Entity;
 
 function AddEntity ():React.JSX.Element {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const { register, reset, getValues } = useForm<FormValues>({mode: 'onChange'});
     const handleAddEntity = (evt: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         evt.preventDefault();
@@ -33,9 +34,6 @@ function AddEntity ():React.JSX.Element {
                     type="text"
                     autoComplete="off"
                     placeholder="Entity name"
-                    onChange={() => {
-                        console.log(getValues(), 'form values');
-                    }}
                     />   
                 </label>
                 <label>
@@ -45,9 +43,6 @@ function AddEntity ():React.JSX.Element {
                     type="number"
                     autoComplete="off"
                     placeholder="coordinate x"
-                    onChange={() => {
-                        console.log(getValues(), 'form values');
-                    }}
                     />   
                     <input
                     {...register('coords.y')}
@@ -55,9 +50,6 @@ function AddEntity ():React.JSX.Element {
                     type="number"
                     autoComplete="off"
                     placeholder="coordinate y"
-                    onChange={() => {
-                        console.log(getValues(), 'form values');
-                    }}
                     />   
                 </label>
                 <label>
@@ -67,9 +59,6 @@ function AddEntity ():React.JSX.Element {
                     type="text"
                     autoComplete="off"
                     placeholder="labels"
-                    onChange={() => {
-                        console.log(getValues(), 'form values');
-                    }}
                     />   
                 </label>
                 <button className="form__button" type="submit" onClick={(evt) => handleAddEntity(evt)}> add entity</button>

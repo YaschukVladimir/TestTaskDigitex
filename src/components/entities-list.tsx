@@ -1,33 +1,63 @@
-import { useDispatch, useSelector } from "react-redux";
-import { Entity, State } from "../types/types";
+import { useSelector } from "react-redux";
+import { Entity, State, ToChangeEntityStringType } from "../types/types";
 import { editEntity, removeEntity } from "../store/app-slice";
-import { useState } from "react";
-
+import { useAppDispatch } from "../hooks/use-app-dispatch";
 
 function EntitiesList(): React.JSX.Element {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const entitiesFromStore = useSelector((state: State) => state.appSlice.entities);
     const handleRemoveEntity = (id: string) => {
-        console.log(id)
         dispatch(removeEntity(id))
     };
-    const [name, setName] = useState('');
-    const [coordX, setCoordX] = useState(0);
-    const [coordY, setCoordY] = useState(0);
-    const [labels, setLabels] = useState('');
 
-    const handleEditEntity = (id: string) => {
-        const editedEntity: Entity = {
-            id: id,
-            name: name,
-            coords: {
-                x: coordX,
-                y: coordY,
-            },
-            labels: labels.split(',')
+    const handleChangeEntity = (evt: React.ChangeEvent<HTMLInputElement>, entity: Entity, type: ToChangeEntityStringType) => {
+        switch (type) {
+            case 'name':
+                dispatch(editEntity({
+                    id: entity.id,
+                    name: evt.target.value,
+                    coords: {
+                        x: entity.coords.x,
+                        y: entity.coords.y
+                    },
+                    labels: entity.labels
+                }))
+                break;
+            case 'coordX':
+                dispatch(editEntity({
+                    id: entity.id,
+                    name: entity.name,
+                    coords: {
+                        x: evt.target.value,
+                        y: entity.coords.y
+                    },
+                    labels: entity.labels
+                }))
+                break;
+            case 'coordY':
+                dispatch(editEntity({
+                    id: entity.id,
+                    name: entity.name,
+                    coords: {
+                        x: entity.coords.x,
+                        y: evt.target.value,
+                    },
+                    labels: entity.labels
+                }))
+                break;
+            case 'labels':
+                dispatch(editEntity({
+                    id: entity.id,
+                    name: entity.name,
+                    coords: {
+                        x: entity.coords.x,
+                        y: entity.coords.y,
+                    },
+                    labels: evt.target.value
+                }))
+                break;
         }
-        dispatch(editEntity(editedEntity))
-    }
+      }
 
 
     if (entitiesFromStore.length) {
@@ -41,28 +71,30 @@ function EntitiesList(): React.JSX.Element {
                                     <input
                                         className="list__data"
                                         defaultValue={entity.name}
-                                        onChange={(evt) => setName(evt.currentTarget.value)}>
+                                        onChange={(evt) => handleChangeEntity(evt, entity, 'name')}
+                                    >
                                     </input>
                                     <input
                                         className="list__data"
                                         defaultValue={entity.coords.x}
-                                        onChange={(evt) => setCoordX(Number(evt.currentTarget.value))}>
+                                        onChange={(evt) => handleChangeEntity(evt, entity, 'coordX')}
+                                    >
                                     </input>
                                     <input
                                         className="list__data"
                                         defaultValue={entity.coords.y}
-                                        onChange={(evt) => setCoordY(Number(evt.currentTarget.value))}>
+                                        onChange={(evt) => handleChangeEntity(evt, entity, 'coordY')}
+                                    >
                                     </input>
                                     <input
                                         className="list__data"
                                         defaultValue={entity.labels}
-                                        onChange={(evt) => setLabels(evt.currentTarget.value)}>
+                                        onChange={(evt) => handleChangeEntity(evt, entity, 'labels')}
+                                    >
                                     </input>
                                 </div>
-                                <button className="list__btn edit btn" onClick={() => handleEditEntity(entity.id)}>edit entity</button>
                                 <button className="list__btn remove btn" onClick={() => handleRemoveEntity(entity.id)}>remove entity &times;</button>
                             </li>
-
                         )
                     })}
                 </ul>
